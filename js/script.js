@@ -22,7 +22,6 @@ const DEFAULT_MONITORAMENTO = [
     { loteId: 'L-2023-01', data: '2023-10-17', temp: 25.8, umidade: 60 },
     { loteId: 'L-2023-01', data: '2023-10-18', temp: 26.0, umidade: 63 },
     { loteId: 'L-2023-01', data: '2023-10-19', temp: 26.7, umidade: 64 },
-
     { loteId: 'L-2023-02', data: '2023-10-10', temp: 22.0, umidade: 70 },
     { loteId: 'L-2023-02', data: '2023-10-11', temp: 23.5, umidade: 68 },
     { loteId: 'L-2023-02', data: '2023-10-12', temp: 24.0, umidade: 69 },
@@ -59,8 +58,9 @@ let alimentacaoData = getStorageData(STORAGE_KEYS.ALIMENTACAO, DEFAULT_ALIMENTAC
 
 function checkAuth() {
     const currentUser = localStorage.getItem(STORAGE_KEYS.USER);
-    const isLoginPage = window.location.pathname.endsWith('login.html');
-    
+    const path = window.location.pathname.toLowerCase();
+    const isLoginPage = path.endsWith('login.html');
+
     if (!currentUser && !isLoginPage) {
         window.location.href = 'login.html';
     } else if (currentUser && isLoginPage) {
@@ -106,7 +106,7 @@ function validarElegibilidadeColheita(lote) {
         atendeTemp: atendeTemp,
         motivos: [
             !atendeDias ? `Necessário 45 dias de ciclo (Atual: ${dias} dias).` : null,
-            !atendeTemp ? `Média térmica de 10 dias insuficiente (Atual: ${mediaTemp}°C | Min: 25.0°C). Risk Biológico!` : null
+            !atendeTemp ? `Média térmica de 10 dias insuficiente (Atual: ${mediaTemp}°C | Min: 25.0°C). Risco Biológico!` : null
         ].filter(Boolean)
     };
 }
@@ -118,4 +118,5 @@ function toggleModal(modalId, show = true) {
         else modal.classList.remove('active');
     }
 }
+
 checkAuth();
