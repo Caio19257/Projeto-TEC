@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Colheita - BugFarm Tech</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="brand">
+                <i class="fa-solid fa-bug"></i>
+                <h1>BugFarm <span>Tech</span></h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
+                <li><a href="lotes.html" class="nav-link"><i class="fa-solid fa-boxes-stacked"></i> Lotes de Insetos</a></li>
+                <li><a href="monitoramento.html" class="nav-link"><i class="fa-solid fa-temperature-arrow-up"></i> Monitoramento Estufa</a></li>
+                <li><a href="alimentacao.html" class="nav-link"><i class="fa-solid fa-utensils"></i> Alimentação Diária</a></li>
+                <li><a href="colheita.html" class="nav-link active"><i class="fa-solid fa-wheat-awn"></i> Painel de Colheita</a></li>
+            </ul>
+            <div class="user-profile">
+                <div class="user-info">
+                    <div class="avatar">OP</div>
+                    <div>
+                        <div style="font-size: 0.85rem; font-weight: 600;">Operador</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">Vigilância Sanitarista</div>
+                    </div>
+                </div>
+                <button onclick="logout()" class="btn-logout"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="header-title">
+                <div>
+                    <h2>Validação de Validação de Vigilância para Colheita</h2>
+                    <p>Validação automatizada das regras bio-sanitárias para liberação do lote de alta proteína</p>
+                </div>
+            </div>
+
+            <div style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; padding: 1.25rem; margin-bottom: 2rem;">
+                <h4 style="color: var(--accent-blue); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fa-solid fa-shield-halved"></i> Regra Biológica Sanitarista de Liberação
+                </h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+                    Para alterar o status de um lote para <strong>"Pronto para Colheita"</strong>, o sistema exige strictamente:
+                    <br>1. Validação de que se passaram exatamente <strong>45 dias ou mais</strong> desde a eclosão dos ovos.
+                    <br>2. Validação de que a média de temperatura registrada nos últimos 10 dias <strong>NÃO caiu abaixo de 25°C</strong> (Evitando risco bio-sanitário de contaminação bacteriana por estresse térmico).
+                </p>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Lote</th>
+                            <th>Espécie</th>
+                            <th>Dias pós Eclosão</th>
+                            <th>Média Térmica (10d)</th>
+                            <th>Status de Validação</th>
+                            <th>Ação / Liberação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="colheitaTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal" id="modalCertificado">
+        <div class="modal-content" style="border-color: var(--accent-green);">
+            <div class="modal-header">
+                <h3 style="color: var(--accent-green);"><i class="fa-solid fa-certificate"></i> Certificado de Sanidade Emitido</h3>
+                <button onclick="toggleModal('modalCertificado', false)" style="background:none; border:none; color:#fff; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="certificadoConteudo" style="font-size: 0.9rem; line-height: 1.6; color: var(--text-muted);">
+            </div>
+            <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem;">
+                <button onclick="toggleModal('modalCertificado', false)" class="btn btn-primary">Concluir Processo</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        function renderColheita() {
+            const tbody = document.getElementById('colheitaTableBody');
+            tbody.innerHTML = '';
+
+            lotesData.forEach(lote => {
+                const val = validarElegibilidadeColheita(lote);
+                const tr = document.createElement('tr');
+
+                tr.innerHTML = `
+                    <td><strong>${lote.id}</strong></td>
+                    <td>${lote.especie}</td>
+                    <td>
+                        ${val.diasCalculados} dias 
+                        ${val.atendeDias 
+                            ? '<i class="fa-solid fa-check" style="color: var(--accent-green);"></i>' 
+                            : '<i class="fa-solid fa-xmark" style="color: var(--accent-red);"></i>'}
+                    </td>
+                    <td>
+                        ${val.mediaTempCalculada}°C 
+                        ${val.atendeTemp 
+                            ? '<i class="fa-solid fa-check" style="color: var(--accent-green);"></i>' 
+                            : '<i class="fa-solid fa-xmark" style="color: var(--accent-red);"></i>'}
+                    </td>
+                    <td>
+                        ${val.elegivel 
+                            ? '<span class="badge badge-ready"><i class="fa-solid fa-circle-check"></i> PRONTO PARA COLHEITA</span>' 
+                            : '<span class="badge badge-risk"><i class="fa-solid fa-ban"></i> RETIDO PELA SANIDADE</span>'}
+                    </td>
+                    <td>
+                        ${val.elegivel 
+                            ? `<button onclick="emitirCertificado('${lote.id}')" class="btn btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">
+                                <i class="fa-solid fa-file-contract"></i> Emitir Sanidade
+                               </button>` 
+                            : `<button disabled class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; opacity: 0.5; cursor: not-allowed;" title="${val.motivos.join(' ')}">
+                                Blocado
+                               </button>`}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function emitirCertificado(loteId) {
+            const lote = lotesData.find(l => l.id === loteId);
+            const val = validarElegibilidadeColheita(lote);
+
+            const div = document.getElementById('certificadoConteudo');
+            div.innerHTML = `
+                <p><strong>CÓDIGO DE RASTREABILIDADE SANITÁRIA:</strong> BUG-${Math.floor(Math.random() * 899999 + 100000)}</p>
+                <hr style="border-color: var(--panel-border); margin: 0.8rem 0;">
+                <p><strong>Lote Liberado:</strong> ${lote.id}</p>
+                <p><strong>Biomassa Aprovada:</strong> ${lote.quantidadeKg} kg de ${lote.especie}</p>
+                <p><strong>Idade de Cativeiro:</strong> ${val.diasCalculados} dias (Requisito: >= 45 dias)</p>
+                <p><strong>Média Térmica Sanitarista (10d):</strong> ${val.mediaTempCalculada}°C (Requisito: >= 25.0°C)</p>
+                <hr style="border-color: var(--panel-border); margin: 0.8rem 0;">
+                <p style="color: var(--accent-green); font-size: 0.8rem;">
+                    <i class="fa-solid fa-shield-check"></i> Este lote cumpriu rigorosamente todas as diretrizes de biossegurança e está apto para processamento em farinha de alta proteína.
+                </p>
+            `;
+            toggleModal('modalCertificado', true);
+        }
+
+        renderColheita();
+    </script>
+</body>
+</html>
