@@ -6,10 +6,12 @@
     <title>Dashboard - BugFarm Tech</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/script.js"></script>
     <script>
-  if (!localStorage.getItem("logado")) {
-    window.location.replace("login.html");
-  }
+      if (!localStorage.getItem(STORAGE_KEYS.USER)) {
+        window.location.replace("login.html");
+      }
+    </script>
 </script>
 </head>
 <body>
