@@ -1,4 +1,24 @@
 const STORAGE_KEYS = {
+  USER: 'bugfarm_user',
+};
+(function () {
+  const naPaginaDeLogin = window.location.pathname.endsWith('login.html');
+  const logado = !!localStorage.getItem(STORAGE_KEYS.USER);
+
+  if (!naPaginaDeLogin && !logado) {
+    window.location.replace('login.html');
+  }
+})();
+function sair() {
+  localStorage.removeItem(STORAGE_KEYS.USER);
+  window.location.replace('login.html');
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const tabelaLotes = document.getElementById('tabelaLotes');
+  if (tabelaLotes) {
+  }
+});
+const STORAGE_KEYS = {
     LOTES: 'bugfarm_lotes',
     MONITORAMENTO: 'bugfarm_monitoramento',
     ALIMENTACAO: 'bugfarm_alimentacao',
