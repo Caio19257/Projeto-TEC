@@ -8,11 +8,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="js/script.js"></script>
     <script>
-      if (!localStorage.getItem(STORAGE_KEYS.USER)) {
-        window.location.replace("login.html");
-      }
+        //eu não sei como isso não estava funcionando, mas se isso corrige o erro de pular a página de login então tá ótimo
+        document.addEventListener("DOMContentLoaded", function() { 
+            if (!localStorage.getItem("user") && (!window.STORAGE_KEYS || !localStorage.getItem(window.STORAGE_KEYS.USER))) {
+                window.location.replace("login.html");
+            }
+        });
     </script>
-</script>
 </head>
 <body>
     <div class="app-container">
@@ -89,9 +91,10 @@
         </main>
     </div>
 
-    <script src="js/script.js"></script>
     <script>
         function loadDashboardData() {
+            if (typeof lotesData === 'undefined') return;
+            
             document.getElementById('cardTotalLotes').innerText = lotesData.length;
             
             const totalKg = lotesData.reduce((acc, l) => acc + parseFloat(l.quantidadeKg), 0);
@@ -128,7 +131,10 @@
             document.getElementById('cardAlertas').innerText = alertas;
         }
 
-        loadDashboardData();
+        // Executa ao carregar a página
+        window.onload = function() {
+            loadDashboardData();
+        };
     </script>
 </body>
 </html>
