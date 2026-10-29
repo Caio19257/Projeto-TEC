@@ -1,49 +1,188 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head> 
+<head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>Login - BugFarm Tech</title>
+
     <link rel="stylesheet" href="css/style.css">
-    <script src="js/script.js"></script>
-    <script>
-        //eu tive que refazer o código inteiro, mas FINALMENTE FUNCIONOU e está melhor e menor.
-        (function() {
-            const userKey = (window.STORAGE_KEYS && window.STORAGE_KEYS.USER) ? window.STORAGE_KEYS.USER : "user";
-            if (localStorage.getItem(userKey)) {
-                window.location.replace("index.html");
-            }
-        })();
-    </script>
-</head>
-<body class="login-body">
-    <div class="login-container">
-        <h2>BugFarm <span>Tech</span></h2>
-        <form id="loginForm" onsubmit="realizarLogin(event)">
-            <div class="input-group">
-                <label for="email">E-mail</label>
-                <input type="email" id="email" required placeholder="seu.email@bugfarm.com">
-            </div>
-            <div class="input-group">
-                <label for="senha">Senha</label>
-                <input type="password" id="senha" required placeholder="********">
-            </div>
-            <button type="submit" class="btn-primary">Entrar</button>
-        </form>
-    </div>
+
+    <style>
+        body {
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f3f6f4;
+            font-family: Arial, sans-serif;
+        }
+
+        .login-container {
+            width: min(90%, 400px);
+            padding: 32px;
+            box-sizing: border-box;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .login-container h1 {
+            margin: 0 0 8px;
+            color: #1f6b45;
+            text-align: center;
+        }
+
+        .login-container p {
+            margin: 0 0 24px;
+            color: #5d665f;
+            text-align: center;
+        }
+
+        .campo {
+            margin-bottom: 16px;
+        }
+
+        .campo label {
+            display: block;
+            margin-bottom: 6px;
+            color: #29332c;
+            font-weight: bold;
+        }
+
+        .campo input {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            border: 1px solid #bdc8c0;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        .campo input:focus {
+            border-color: #248b59;
+            outline: 2px solid rgba(36, 139, 89, 0.15);
+        }
+
+        .botao-entrar {
+            width: 100%;
+            padding: 12px;
+            border: 0;
+            border-radius: 6px;
+            background: #248b59;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .botao-entrar:hover {
+            background: #1b7046;
+        }
+
+        .mensagem-erro {
+            display: none;
+            margin: 0 0 16px;
+            padding: 10px;
+            border-radius: 6px;
+            background: #ffe6e6;
+            color: #a30000;
+            text-align: center;
+        }
+    </style>
 
     <script>
-        function realizarLogin(event) {
-            event.preventDefault();
-            
-            const userKey = (window.STORAGE_KEYS && window.STORAGE_KEYS.USER) ? window.STORAGE_KEYS.USER : "user";
-            
-            // Salva a sessão no localStorage
-            localStorage.setItem(userKey, JSON.stringify({ email: document.getElementById('email').value, logado: true }));
-            
-            // Redireciona para o painel principal
+        const usuarioJaLogado =
+            sessionStorage.getItem("bugfarm_usuario_logado") === "true";
+
+        if (usuarioJaLogado) {
             window.location.replace("index.html");
         }
+    </script>
+</head>
+
+<body>
+    <main class="login-container">
+        <h1>BugFarm Tech</h1>
+        <p>Entre para acessar o sistema</p>
+
+        <div
+            id="mensagemErro"
+            class="mensagem-erro"
+            role="alert"
+        ></div>
+
+        <form id="formLogin">
+            <div class="campo">
+                <label for="email">E-mail</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    autocomplete="username"
+                    required
+                >
+            </div>
+
+            <div class="campo">
+                <label for="senha">Senha</label>
+
+                <input
+                    type="password"
+                    id="senha"
+                    name="senha"
+                    autocomplete="current-password"
+                    required
+                >
+            </div>
+
+            <button class="botao-entrar" type="submit">
+                Entrar
+            </button>
+        </form>
+    </main>
+
+    <script src="js/auth.js"></script>
+
+    <script>
+        const formulario = document.getElementById("formLogin");
+        const mensagemErro = document.getElementById("mensagemErro");
+
+        formulario.addEventListener("submit", function (evento) {
+            evento.preventDefault();
+
+            const email = document
+                .getElementById("email")
+                .value
+                .trim();
+
+            const senha = document
+                .getElementById("senha")
+                .value;
+
+            mensagemErro.style.display = "none";
+            mensagemErro.textContent = "";
+
+            if (email === "" || senha === "") {
+                mensagemErro.textContent =
+                    "Preencha o e-mail e a senha.";
+
+                mensagemErro.style.display = "block";
+                return;
+            }
+
+            /*
+             * Este projeto é estático e não possui servidor.
+             * Portanto, este login apenas controla a navegação.
+             * Qualquer e-mail e senha preenchidos serão aceitos.
+             */
+            window.BugFarmAuth.entrar(email);
+        });
     </script>
 </body>
 </html>

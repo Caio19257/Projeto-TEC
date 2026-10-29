@@ -2,78 +2,110 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>Dashboard - BugFarm Tech</title>
+
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="js/script.js"></script>
-    <script>
-        // Verificação segura para evitar loops de redirecionamento
-        (function() {
-            const userKey = (window.STORAGE_KEYS && window.STORAGE_KEYS.USER) ? window.STORAGE_KEYS.USER : "user";
-            if (!localStorage.getItem(userKey)) {
-                window.location.replace("login.html");
-            }
-        })();
-    </script>
+
+    <script src="js/auth.js"></script>
 </head>
+
 <body>
-    <div class="app-container">
-        <aside class="sidebar">
-            <div class="brand">
-                <i class="fa-solid fa-bug"></i>
-                <h1>BugFarm <span>Tech</span></h1>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link active"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
-                <li><a href="lotes.html" class="nav-link"><i class="fa-solid fa-boxes-stacked"></i> Lotes de Insetos</a></li>
-                <li><a href="monitoramento.html" class="nav-link"><i class="fa-solid fa-temperature-arrow-up"></i> Monitoramento Estufa</a></li>
-                <li><a href="alimentacao.html" class="nav-link"><i class="fa-solid fa-utensils"></i> Alimentação Diária</a></li>
-                <li><a href="colheita.html" class="nav-link"><i class="fa-solid fa-wheat-awn"></i> Painel de Colheita</a></li>
+    <aside class="sidebar">
+        <h1>BugFarm Tech</h1>
+
+        <nav aria-label="Menu principal">
+            <ul>
+                <li>
+                    <a href="index.html" aria-current="page">
+                        Dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a href="lotes.html">
+                        Lotes de Insetos
+                    </a>
+                </li>
+
+                <li>
+                    <a href="monitoramento.html">
+                        Monitoramento Estufa
+                    </a>
+                </li>
+
+                <li>
+                    <a href="alimentacao.html">
+                        Alimentação Diária
+                    </a>
+                </li>
+
+                <li>
+                    <a href="colheita.html">
+                        Painel de Colheita
+                    </a>
+                </li>
             </ul>
-            <div class="user-profile">
-                <div class="user-info">
-                    <div class="avatar">OP</div>
-                    <div>
-                        <div style="font-size: 0.85rem; font-weight: 600;">Operador</div>
-                        <div style="font-size: 0.75rem; color: var(--text-muted);">Vigilância Sanitarista</div>
-                    </div>
-                </div>
-                <button onclick="logout()" class="btn-logout" title="Sair"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
-            </div>
-        </aside>
+        </nav>
 
-        <main class="main-content">
-            <div class="header-title">
-                <div>
-                    <h2>Visão Geral da Produção</h2>
-                    <p>Métricas gerais de controle de biocativeiro e sanidade</p>
-                </div>
+        <section class="usuario">
+            <div class="avatar">OP</div>
+
+            <div>
+                <strong>Operador</strong>
+                <p>Vigilância Sanitarista</p>
             </div>
 
-            <div class="grid-cards">
-                <div class="card">
-                    <div class="card-header">Total de Lotes Ativos <i class="fa-solid fa-boxes-stacked"></i></div>
-                    <div class="card-value" id="cardTotalLotes">0</div>
-                </div>
-                <div class="card">
-                    <div class="card-header">Biomassa Estimada (kg) <i class="fa-solid fa-weight-hanging"></i></div>
-                    <div class="card-value" id="cardBiomassa">0 kg</div>
-                </div>
-                <div class="card">
-                    <div class="card-header">Lotes Aprovados Colheita <i class="fa-solid fa-circle-check" style="color: var(--accent-green);"></i></div>
-                    <div class="card-value" id="cardLotesAprovados">0</div>
-                </div>
-                <div class="card">
-                    <div class="card-header">Alertas Biológicos <i class="fa-solid fa-triangle-exclamation" style="color: var(--accent-red);"></i></div>
-                    <div class="card-value" id="cardAlertas">0</div>
-                </div>
-            </div>
+            <button
+                type="button"
+                id="botaoSair"
+                class="botao-sair"
+            >
+                Sair
+            </button>
+        </section>
+    </aside>
 
-            <div class="table-container">
-                <div class="table-header-action">
-                    <h3 style="font-size: 1rem;">Status Atual dos Lotes em Cativeiro</h3>
-                </div>
+    <main class="conteudo-principal">
+        <header>
+            <h2>Visão Geral da Produção</h2>
+
+            <p>
+                Métricas gerais de controle de biocativeiro e
+                sanidade
+            </p>
+        </header>
+
+        <section class="cards" aria-label="Métricas da produção">
+            <article class="card">
+                <h3>Total de Lotes Ativos</h3>
+                <strong id="totalLotesAtivos">0</strong>
+            </article>
+
+            <article class="card">
+                <h3>Biomassa Estimada (kg)</h3>
+                <strong id="biomassaEstimada">0 kg</strong>
+            </article>
+
+            <article class="card">
+                <h3>Lotes Aprovados para Colheita</h3>
+                <strong id="lotesAprovados">0</strong>
+            </article>
+
+            <article class="card">
+                <h3>Alertas Biológicos</h3>
+                <strong id="alertasBiologicos">0</strong>
+            </article>
+        </section>
+
+        <section class="tabela-container">
+            <h3>Status Atual dos Lotes em Cativeiro</h3>
+
+            <div class="tabela-responsiva">
                 <table>
                     <thead>
                         <tr>
@@ -81,60 +113,29 @@
                             <th>Espécie</th>
                             <th>Estufa</th>
                             <th>Dias do Ciclo</th>
-                            <th>Média Temp (10d)</th>
+                            <th>Média Temp. (10d)</th>
                             <th>Status Sanitário</th>
                         </tr>
                     </thead>
-                    <tbody id="dashboardTableBody">
+
+                    <tbody id="tabelaLotes">
+                        <tr>
+                            <td colspan="6">
+                                Nenhum lote cadastrado.
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
-        </main>
-    </div>
+        </section>
+    </main>
 
     <script>
-        function loadDashboardData() {
-            if (typeof lotesData === 'undefined') return;
-            
-            document.getElementById('cardTotalLotes').innerText = lotesData.length;
-            
-            const totalKg = lotesData.reduce((acc, l) => acc + parseFloat(l.quantidadeKg), 0);
-            document.getElementById('cardBiomassa').innerText = `${totalKg.toFixed(1)} kg`;
-
-            let aprovados = 0;
-            let alertas = 0;
-            const tbody = document.getElementById('dashboardTableBody');
-            tbody.innerHTML = '';
-
-            lotesData.forEach(lote => {
-                const validacao = validarElegibilidadeColheita(lote);
-                if (validacao.elegivel) aprovados++;
-                if (!validacao.atendeTemp) alertas++;
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>${lote.id}</strong></td>
-                    <td>${lote.especie}</td>
-                    <td>${lote.estufa}</td>
-                    <td>${validacao.diasCalculados} dias</td>
-                    <td>${validacao.mediaTempCalculada}°C</td>
-                    <td>
-                        ${validacao.elegivel 
-                            ? '<span class="badge badge-ready">Pronto p/ Colheita</span>' 
-                            : '<span class="badge badge-growth">Em Maturação</span>'}
-                        ${!validacao.atendeTemp ? '<span class="badge badge-risk">Risco Térmico</span>' : ''}
-                    </td>
-                `;
-                tbody.appendChild(tr);
+        document
+            .getElementById("botaoSair")
+            .addEventListener("click", function () {
+                window.BugFarmAuth.sair();
             });
-
-            document.getElementById('cardLotesAprovados').innerText = aprovados;
-            document.getElementById('cardAlertas').innerText = alertas;
-        }
-
-        window.onload = function() {
-            loadDashboardData();
-        };
     </script>
 </body>
 </html>
