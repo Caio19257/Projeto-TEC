@@ -1,19 +1,17 @@
+// esse Storage serve para salvar as chaves de entrada do site
 const STORAGE_KEYS = {
-  USER: 'bugfarm_user',
+    USER: 'bugfarm_user_session'
 };
-(function () {
-  const naPaginaDeLogin = window.location.pathname.endsWith('login.html');
-  const logado = !!localStorage.getItem(STORAGE_KEYS.USER);
 
-  if (!naPaginaDeLogin && !logado) {
-    window.location.replace('login.html');
-  }
-})();
-function sair() {
-  localStorage.removeItem(STORAGE_KEYS.USER);
-  window.location.replace('login.html');
-}
-document.addEventListener('DOMContentLoaded', () => {
+window.STORAGE_KEYS = STORAGE_KEYS;
+
+// Função global de Logout alterada, agora essa bomba funciona
+function logout() {
+    const userKey = STORAGE_KEYS.USER || "user";
+    localStorage.removeItem(userKey);
+    localStorage.removeItem("user"); 
+    window.location.replace("login.html");
+}document.addEventListener('DOMContentLoaded', () => {
   const tabelaLotes = document.getElementById('tabelaLotes');
   if (tabelaLotes) {
   }

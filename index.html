@@ -8,12 +8,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="js/script.js"></script>
     <script>
-        //eu não sei como isso não estava funcionando, mas se isso corrige o erro de pular a página de login então tá ótimo
-        document.addEventListener("DOMContentLoaded", function() { 
-            if (!localStorage.getItem("user") && (!window.STORAGE_KEYS || !localStorage.getItem(window.STORAGE_KEYS.USER))) {
+        // Verificação segura para evitar loops de redirecionamento
+        (function() {
+            const userKey = (window.STORAGE_KEYS && window.STORAGE_KEYS.USER) ? window.STORAGE_KEYS.USER : "user";
+            if (!localStorage.getItem(userKey)) {
                 window.location.replace("login.html");
             }
-        });
+        })();
     </script>
 </head>
 <body>
@@ -131,7 +132,6 @@
             document.getElementById('cardAlertas').innerText = alertas;
         }
 
-        // Executa ao carregar a página
         window.onload = function() {
             loadDashboardData();
         };
